@@ -187,40 +187,7 @@
     <div id="task-list-view" class="task-list-container" style="display: none;">
         <!-- JavaScript auto-generates 60 tasks here -->
     </div>
-
-    <script>
-        function showTaskListView() {
-            document.getElementById('main-menu-view').style.display = 'none';
-            document.getElementById('task-list-view').style.display = 'flex';
-            document.getElementById('back-button').style.display = 'block';
-            document.getElementById('page-title').innerText = 'Available Tasks';
-            
-            const taskContainer = document.getElementById('task-list-view');
-            if(taskContainer.innerHTML.trim() === "") {
-                let html = "";
-                for(let i = 1; i <= 60; i++) {
-                    html += `
-                        <div class="task-item" onclick="startTask(${i})">
-                            <div class="task-info">
-                                <div class="task-title">Task ${i}</div>
-                                <div class="task-reward">Reward: $0.10</div>
-                            </div>
-                            <div class="task-status">Start</div>
-                        </div>
-                    `;
-                }
-                taskContainer.innerHTML = html;
-            }
-        }
-
-        function showMainMenu() {
-            document.getElementById('main-menu-view').style.display = 'flex';
-            document.getElementById('task-list-view').style.display = 'none';
-            document.getElementById('back-button').style.display = 'none';
-            document.getElementById('page-title').innerText = 'Task Earning Bot';
-        }
-
-        <script>
+<script>
     function showTaskListView() {
         const mainMenu = document.getElementById('main-menu-view');
         if (mainMenu) mainMenu.style.display = 'none';
@@ -231,27 +198,28 @@
         if (taskContainer.innerHTML.trim() === "") {
             let html = "";
             for (let i = 1; i <= 60; i++) {
-                html += `
-                    <div style="background: #151a21; border: 1px solid rgba(197, 160, 89, 0.3); border-radius: 10px; padding: 15px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; cursor: pointer;" onclick="startTask(${i})">
-                        <div style="display: flex; flex-direction: column; gap: 4px;">
-                            <div style="font-weight: bold; color: #ffffff; font-size: 16px;">Task ${i}</div>
-                            <div style="color: #c5a059; font-size: 14px;">Reward: $0.10</div>
-                        </div>
-                        <div style="font-size: 13px; background: rgba(197, 160, 89, 0.1); color: #c5a059; padding: 4px 8px; border-radius: 5px; border: 1px solid rgba(197, 160, 89, 0.3);">Start</div>
-                    </div>
-                `;
+                html += '<div style="background: #151a21; border: 1px solid rgba(197, 160, 89, 0.3); border-radius: 10px; padding: 15px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; cursor: pointer; width: 100%; max-width: 400px; box-sizing: border-box;" onclick="startTask(' + i + ')">' +
+                            '<div style="display: flex; flex-direction: column; gap: 4px; text-align: left;">' +
+                                '<div style="font-weight: bold; color: #ffffff; font-size: 16px;">' + i + '. Task = $0.10</div>' +
+                            '</div>' +
+                            '<div style="font-size: 13px; background: rgba(197, 160, 89, 0.1); color: #c5a059; padding: 4px 12px; border-radius: 5px; border: 1px solid rgba(197, 160, 89, 0.3); font-weight: bold;">Start</div>' +
+                        '</div>';
             }
             taskContainer.innerHTML = html;
         }
     }
 
-    function startTask(taskNumber) {
-        // টেলিগ্রাম ফ্রেন্ডলি উইন্ডো ইউআরএল সিস্টেম
-       window.location.href = "https://t.me_" + taskNumber;
+    function showMainMenu() {
+        document.getElementById('main-menu-view').style.display = 'flex';
+        document.getElementById('task-list-view').style.display = 'none';
+        document.getElementById('back-button').style.display = 'none';
+        document.getElementById('page-title').innerText = 'Task Earning Bot';
+    }
 
+    function startTask(taskNumber) {
+        window.location.href = "https://t.me_" + taskNumber;
     }
 </script>
 
-    </script>
 </body>
 </html>
