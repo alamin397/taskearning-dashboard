@@ -116,3 +116,35 @@
 
 </body>
 </html>
+
+<!-- ১. ৬০টি টাস্কের লিস্ট দেখানোর কন্টেইনার (আগের ফাইলের মেইন কন্টেইনারের নিচে বসাবেন) -->
+<div id="task-list-view" style="display: none; width: 100%; max-width: 400px; flex-direction: column; gap: 10px; margin-top: 20px;">
+    <!-- জাভাস্ক্রিপ্ট এখানে অটোমেটিক ৬০টি টাস্ক তৈরি করবে -->
+</div>
+
+<script>
+    // Task বাটনে onclick="showTaskListView()" ফাংশন হিসেবে এটি কাজ করবে
+    function showTaskListView() {
+        const mainMenu = document.getElementById('main-menu-view');
+        if (mainMenu) mainMenu.style.display = 'none';
+        
+        const taskContainer = document.getElementById('task-list-view');
+        taskContainer.style.display = 'flex';
+        
+        if (taskContainer.innerHTML.trim() === "") {
+            let html = "";
+            for (let i = 1; i <= 60; i++) {
+                html += `
+                    <div style="background: #151a21; border: 1px solid rgba(197, 160, 89, 0.3); border-radius: 10px; padding: 15px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; cursor: pointer;">
+                        <div style="display: flex; flex-direction: column; gap: 4px;">
+                            <div style="font-weight: bold; color: #ffffff; font-size: 16px;">Task ${i}</div>
+                            <div style="color: #c5a059; font-size: 14px;">Reward: $0.10</div>
+                        </div>
+                        <div style="font-size: 13px; background: rgba(197, 160, 89, 0.1); color: #c5a059; padding: 4px 8px; border-radius: 5px; border: 1px solid rgba(197, 160, 89, 0.3);">Start</div>
+                    </div>
+                `;
+            }
+            taskContainer.innerHTML = html;
+        }
+    }
+</script>
