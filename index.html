@@ -17,14 +17,34 @@
         }
         .header {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
+            width: 100%;
+            max-width: 400px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
         .header h1 {
             color: #c5a059;
-            font-size: 24px;
+            font-size: 22px;
             margin: 0;
             text-transform: uppercase;
             letter-spacing: 1px;
+        }
+        .back-btn {
+            background: none;
+            border: 1px solid #c5a059;
+            color: #c5a059;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+        .back-btn:active {
+            background: #c5a059;
+            color: #0b0c10;
         }
         .stats-container {
             width: 100%;
@@ -86,65 +106,123 @@
         .icon {
             font-size: 24px;
         }
+        .task-list-container {
+            width: 100%;
+            max-width: 400px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            box-sizing: border-box;
+        }
+        .task-item {
+            background: #151a21;
+            border: 1px solid rgba(197, 160, 89, 0.3);
+            border-radius: 10px;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .task-item:active {
+            background: #1f2833;
+            border-color: #c5a059;
+        }
+        .task-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .task-title {
+            font-weight: bold;
+            color: #ffffff;
+            font-size: 16px;
+        }
+        .task-reward {
+            color: #c5a059;
+            font-size: 14px;
+        }
+        .task-status {
+            font-size: 13px;
+            background: rgba(197, 160, 89, 0.1);
+            color: #c5a059;
+            padding: 4px 8px;
+            border-radius: 5px;
+            border: 1px solid rgba(197, 160, 89, 0.3);
+        }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <h1>Task Earning Bot</h1>
+        <h1 id="page-title">Task Earning Bot</h1>
+        <button class="back-btn" id="back-button" style="display: none;" onclick="showMainMenu()">Back</button>
     </div>
 
-    <div class="stats-container">
-        <div class="stat-row">
-            <span class="stat-label">Total Task Completed</span>
-            <span class="stat-value">0</span>
+    <!-- Main Dashboard View -->
+    <div id="main-menu-view" style="width: 100%; display: flex; flex-direction: column; align-items: center;">
+        <div class="stats-container">
+            <div class="stat-row">
+                <span class="stat-label">Total Task Completed</span>
+                <span class="stat-value">0</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-label">Current Balance</span>
+                <span class="stat-value">0.00 TK</span>
+            </div>
         </div>
-        <div class="stat-row">
-            <span class="stat-label">Current Balance</span>
-            <span class="stat-value">0.00 TK</span>
+
+        <div class="grid-container">
+            <div class="menu-btn" onclick="showTaskListView()"><span class="icon">🎯</span>Task</div>
+            <div class="menu-btn"><span class="icon">💼</span>Offerwalls</div>
+            <div class="menu-btn"><span class="icon">👥</span>Invite</div>
+            <div class="menu-btn"><span class="icon">💰</span>Balance</div>
+            <div class="menu-btn"><span class="icon">💳</span>Withdraw</div>
+            <div class="menu-btn"><span class="icon">📞</span>Support</div>
         </div>
     </div>
 
-    <div class="grid-container">
-        <div class="menu-btn" onclick="showTaskListView()"><span class="icon">🎯</span>Task</div>
-        <div class="menu-btn"><span class="icon">💼</span>Offerwalls</div>
-        <div class="menu-btn"><span class="icon">👥</span>Invite</div>
-        <div class="menu-btn"><span class="icon">💰</span>Balance</div>
-        <div class="menu-btn"><span class="icon">💳</span>Withdraw</div>
-        <div class="menu-btn"><span class="icon">📞</span>Support</div>
+    <!-- 60 Tasks List View -->
+    <div id="task-list-view" class="task-list-container" style="display: none;">
+        <!-- JavaScript auto-generates 60 tasks here -->
     </div>
 
+    <script>
+        function showTaskListView() {
+            document.getElementById('main-menu-view').style.display = 'none';
+            document.getElementById('task-list-view').style.display = 'flex';
+            document.getElementById('back-button').style.display = 'block';
+            document.getElementById('page-title').innerText = 'Available Tasks';
+            
+            const taskContainer = document.getElementById('task-list-view');
+            if(taskContainer.innerHTML.trim() === "") {
+                let html = "";
+                for(let i = 1; i <= 60; i++) {
+                    html += `
+                        <div class="task-item" onclick="startTask(${i})">
+                            <div class="task-info">
+                                <div class="task-title">Task ${i}</div>
+                                <div class="task-reward">Reward: $0.10</div>
+                            </div>
+                            <div class="task-status">Start</div>
+                        </div>
+                    `;
+                }
+                taskContainer.innerHTML = html;
+            }
+        }
+
+        function showMainMenu() {
+            document.getElementById('main-menu-view').style.display = 'flex';
+            document.getElementById('task-list-view').style.display = 'none';
+            document.getElementById('back-button').style.display = 'none';
+            document.getElementById('page-title').innerText = 'Task Earning Bot';
+        }
+
+        function startTask(taskNumber) {
+            alert("Starting Task " + taskNumber + ". Please submit the code generated in the Telegram bot to complete.");
+        }
+    </script>
 </body>
 </html>
-
-<!-- ১. ৬০টি টাস্কের লিস্ট দেখানোর কন্টেইনার (আগের ফাইলের মেইন কন্টেইনারের নিচে বসাবেন) -->
-<div id="task-list-view" style="display: none; width: 100%; max-width: 400px; flex-direction: column; gap: 10px; margin-top: 20px;">
-    <!-- জাভাস্ক্রিপ্ট এখানে অটোমেটিক ৬০টি টাস্ক তৈরি করবে -->
-</div>
-
-<script>
-    // Task বাটনে onclick="showTaskListView()" ফাংশন হিসেবে এটি কাজ করবে
-    function showTaskListView() {
-        const mainMenu = document.getElementById('main-menu-view');
-        if (mainMenu) mainMenu.style.display = 'none';
-        
-        const taskContainer = document.getElementById('task-list-view');
-        taskContainer.style.display = 'flex';
-        
-        if (taskContainer.innerHTML.trim() === "") {
-            let html = "";
-            for (let i = 1; i <= 60; i++) {
-                html += `
-                    <div style="background: #151a21; border: 1px solid rgba(197, 160, 89, 0.3); border-radius: 10px; padding: 15px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; cursor: pointer;">
-                        <div style="display: flex; flex-direction: column; gap: 4px;">
-                            <div style="font-weight: bold; color: #ffffff; font-size: 16px;">Task ${i}</div>
-                            <div style="color: #c5a059; font-size: 14px;">Reward: $0.10</div>
-                        </div>
-                        <div style="font-size: 13px; background: rgba(197, 160, 89, 0.1); color: #c5a059; padding: 4px 8px; border-radius: 5px; border: 1px solid rgba(197, 160, 89, 0.3);">Start</div>
-                    </div>
-                `;
-            }
-            taskContainer.innerHTML = html;
-        }
-    }
-</script>
