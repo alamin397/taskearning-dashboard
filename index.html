@@ -158,20 +158,44 @@
             document.getElementById('back-button').style.display = 'block';
             document.getElementById('page-title').innerText = 'Available Tasks';
             
-            const taskContainer = document.getElementById('task-list-view');
-            if(taskContainer.innerHTML.trim() === "") {
-                let html = "";
-                for(let i = 1; i <= 60; i++) {
-                    html += '<div style="background: #151a21; border: 1px solid rgba(197, 160, 89, 0.3); border-radius: 10px; padding: 15px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; cursor: pointer; width: 100%; box-sizing: border-box;" onclick="startTask(' + i + ')">' +
-                                '<div style="display: flex; flex-direction: column; gap: 4px; text-align: left;">' +
-                                    '<div style="font-weight: bold; color: #ffffff; font-size: 16px;">' + i + '. Task = $0.10</div>' +
-                                '</div>' +
-                                '<div style="font-size: 13px; background: rgba(197, 160, 89, 0.1); color: #c5a059; padding: 4px 12px; border-radius: 5px; border: 1px solid rgba(197, 160, 89, 0.3); font-weight: bold;">Start</div>' +
-                            '</div>';
-                }
-                taskContainer.innerHTML = html;
-            }
-        }
+            
+function showTaskListView() {
+    document.getElementById('main-menu-view').style.display = 'none';
+    document.getElementById('task-list-view').style.display = 'flex';
+    document.getElementById('back-button').style.display = 'block';
+    document.getElementById('page-title').innerText = 'Available Tasks';
+
+    const taskContainer = document.getElementById('task-list-view');
+
+    let html = '';
+
+    for (let i = 1; i <= 60; i++) {
+        html += `
+            <div onclick="startTask(${i})"
+                style="
+                    background: #151a21;
+                    border: 1px solid rgba(197,160,89,0.4);
+                    border-radius: 12px;
+                    padding: 18px;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    margin-bottom: 10px;
+                    cursor: pointer;
+                    color: white;
+                    font-size: 16px;
+                ">
+                <span>${i}. Task</span>
+                <span style="color:#c5a059;font-weight:bold;">
+                    $0.10
+                </span>
+            </div>
+        `;
+    }
+
+    taskContainer.innerHTML = html;
+}
+
 
         function showMainMenu() {
             document.getElementById('main-menu-view').style.display = 'flex';
