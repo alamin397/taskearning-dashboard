@@ -15,6 +15,7 @@
             flex-direction: column;
             align-items: center;
         }
+
         .header {
             text-align: center;
             margin-bottom: 20px;
@@ -24,6 +25,7 @@
             justify-content: space-between;
             align-items: center;
         }
+
         .header h1 {
             color: #c5a059;
             font-size: 22px;
@@ -31,181 +33,110 @@
             text-transform: uppercase;
             letter-spacing: 1px;
         }
+
         .back-btn {
             background: none;
             border: 1px solid #c5a059;
             color: #c5a059;
-            padding: 5px 10px;
+            padding: 5px 15px;
             border-radius: 5px;
             cursor: pointer;
             font-size: 14px;
             font-weight: bold;
             transition: all 0.2s;
         }
+
         .back-btn:active {
             background: #c5a059;
             color: #0b0c10;
         }
-        .stats-container {
-            width: 100%;
-            max-width: 400px;
-            background: linear-gradient(135deg, #1f2833, #151a21);
-            border: 1px solid #c5a059;
-            border-radius: 15px;
-            padding: 20px;
-            box-shadow: 0 4px 15px rgba(197, 160, 89, 0.1);
-            margin-bottom: 25px;
-            box-sizing: border-box;
-        }
-        .stat-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 0;
-            border-bottom: 1px solid rgba(197, 160, 89, 0.2);
-        }
-        .stat-row:last-child {
-            border-bottom: none;
-        }
-        .stat-label {
-            font-size: 15px;
-            color: #95a5a6;
-        }
-        .stat-value {
-            font-size: 18px;
-            font-weight: bold;
-            color: #c5a059;
-        }
+
         .grid-container {
             width: 100%;
             max-width: 400px;
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-        }
-        .menu-btn {
-            background: #151a21;
-            border: 1px solid rgba(197, 160, 89, 0.4);
-            border-radius: 12px;
-            padding: 20px 10px;
-            color: #ffffff;
-            font-size: 15px;
-            font-weight: 600;
-            cursor: pointer;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.3s ease;
-        }
-        .menu-btn:active {
-            transform: scale(0.95);
-            border-color: #c5a059;
-            background: #1f2833;
-        }
-        .icon {
-            font-size: 24px;
-        }
-        .task-list-container {
-            width: 100%;
-            max-width: 400px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
+            gap: 12px;
             box-sizing: border-box;
+        }
+
+        .task-card {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: linear-gradient(135deg, #1f2833, #151a21);
+            border: 1px solid #c5a059;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(197, 160, 89, 0.1);
+            box-sizing: border-box;
+        }
+
+        .task-info {
+            font-size: 16px;
+            font-weight: bold;
+            color: #ffffff;
+        }
+
+        .work-btn {
+            background: none;
+            border: 1px solid #c5a059;
+            color: #c5a059;
+            padding: 6px 14px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .work-btn:active {
+            background: #c5a059;
+            color: #0b0c10;
         }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <h1 id="page-title">Task Earning Bot</h1>
-        <button class="back-btn" id="back-button" style="display: none;" onclick="showMainMenu()">Back</button>
+        <h1>Available Tasks</h1>
+        <button class="back-btn" onclick="goBack()">Back</button>
     </div>
 
-    <!-- Main Dashboard View -->
-    <div id="main-menu-view" style="width: 100%; display: flex; flex-direction: column; align-items: center; width: 100%;">
-        <div class="stats-container">
-            <div class="stat-row">
-                <span class="stat-label">Total Task Completed</span>
-                <span class="stat-value">0</span>
-            </div>
-            <div class="stat-row">
-                <span class="stat-label">Current Balance</span>
-                <span class="stat-value">0.00 TK</span>
-            </div>
-        </div>
-
-        <div class="grid-container">
-            <div class="menu-btn" onclick="showTaskListView()"><span class="icon">🎯</span>Task</div>
-            <div class="menu-btn"><span class="icon">💼</span>Offerwalls</div>
-            <div class="menu-btn"><span class="icon">👥</span>Invite</div>
-            <div class="menu-btn"><span class="icon">💰</span>Balance</div>
-            <div class="menu-btn"><span class="icon">💳</span>Withdraw</div>
-            <div class="menu-btn"><span class="icon">📞</span>Support</div>
-        </div>
-    </div>
-
-    <!-- 60 Tasks List View -->
-    <div id="task-list-view" class="task-list-container" style="display: none; width: 100%;">
-        <!-- Tasks will auto generate here -->
-    </div>
+    <!-- এই কন্টেইনারের ভেতরে জাভাস্ক্রিপ্ট কোড দিয়ে ১-৬০ টাস্ক অটোমেটিক তৈরি হবে -->
+    <div class="grid-container" id="task-list-container"></div>
 
     <script>
-        function showTaskListView() {
-            document.getElementById('main-menu-view').style.display = 'none';
-            document.getElementById('task-list-view').style.display = 'flex';
-            document.getElementById('back-button').style.display = 'block';
-            document.getElementById('page-title').innerText = 'Available Tasks';
+        // ১ থেকে ৬০ পর্যন্ত সিরিয়াল টাস্ক তৈরি করার জাভাস্ক্রিপ্ট লজিক
+        document.addEventListener("DOMContentLoaded", () => {
+            const taskContainer = document.getElementById("task-list-container");
             
-            
-function showTaskListView() {
-    document.getElementById('main-menu-view').style.display = 'none';
-    document.getElementById('task-list-view').style.display = 'flex';
-    document.getElementById('back-button').style.display = 'block';
-    document.getElementById('page-title').innerText = 'Available Tasks';
+            if (taskContainer) {
+                taskContainer.innerHTML = ""; // পেজ রিফ্রেশ হলে আগের ডেটা ক্লিয়ার করার জন্য
+                
+                for (let i = 1; i <= 60; i++) {
+                    const taskCard = document.createElement("div");
+                    taskCard.className = "task-card";
+                    
+                    taskCard.innerHTML = `
+                        <div class="task-info">${i}. Task = $0.10</div>
+                        <button class="work-btn" onclick="startTask(${i})">Work</button>
+                    `;
+                    
+                    taskContainer.appendChild(taskCard);
+                }
+            }
+        });
 
-    const taskContainer = document.getElementById('task-list-view');
-
-    let html = '';
-
-    for (let i = 1; i <= 60; i++) {
-        html += `
-            <div onclick="startTask(${i})"
-                style="
-                    background: #151a21;
-                    border: 1px solid rgba(197,160,89,0.4);
-                    border-radius: 12px;
-                    padding: 18px;
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
-                    margin-bottom: 10px;
-                    cursor: pointer;
-                    color: white;
-                    font-size: 16px;
-                ">
-                <span>${i}. Task</span>
-                <span style="color:#c5a059;font-weight:bold;">
-                    $0.10
-                </span>
-            </div>
-        `;
-    }
-
-    taskContainer.innerHTML = html;
-}
-
-
-        function showMainMenu() {
-            document.getElementById('main-menu-view').style.display = 'flex';
-            document.getElementById('task-list-view').style.display = 'none';
-            document.getElementById('back-button').style.display = 'none';
-            document.getElementById('page-title').innerText = 'Task Earning Bot';
+        // ব্যাক বাটনের ফাংশন
+        function goBack() {
+            window.history.back();
         }
 
-        function startTask(taskNumber) {
-            window.location.href = "https://t.me_" + taskNumber;
+        // টাস্ক বাটনে ক্লিক করলে যা হবে
+        function startTask(taskId) {
+            alert("You clicked on Task " + taskId + ". Proceeding to shortlink...");
+            // এখানে পরবর্তীতে শর্টলিংক রিডাইরেকশনের কাজ করা যাবে
         }
     </script>
 </body>
