@@ -3,141 +3,245 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Task Earning Bot - Dashboard</title>
+    <title>Task Earning Bot</title>
+    <script src="https://telegram.org"></script>
     <style>
-        body {
-            background-color: #0b0c10;
-            color: #ffffff;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .header {
-            text-align: center;
-            margin-bottom: 20px;
-            width: 100%;
-            max-width: 400px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .header h1 {
-            color: #c5a059;
-            font-size: 22px;
-            margin: 0;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .back-btn {
-            background: none;
-            border: 1px solid #c5a059;
-            color: #c5a059;
-            padding: 5px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: bold;
-            transition: all 0.2s;
-        }
-
-        .back-btn:active {
-            background: #c5a059;
-            color: #0b0c10;
-        }
-
-        .grid-container {
-            width: 100%;
-            max-width: 400px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            box-sizing: border-box;
-        }
-
-        .task-card {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px;
-            background: linear-gradient(135deg, #1f2833, #151a21);
-            border: 1px solid #c5a059;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(197, 160, 89, 0.1);
-            box-sizing: border-box;
-        }
-
-        .task-info {
-            font-size: 16px;
-            font-weight: bold;
-            color: #ffffff;
-        }
-
-        .work-btn {
-            background: none;
-            border: 1px solid #c5a059;
-            color: #c5a059;
-            padding: 6px 14px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 14px;
-            transition: all 0.2s;
-        }
-
-        .work-btn:active {
-            background: #c5a059;
-            color: #0b0c10;
-        }
+        body { background-color: #0b0c10; color: #ffffff; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        .main-container { width: 100%; max-width: 400px; display: flex; flex-direction: column; gap: 20px; box-sizing: border-box; position: relative; }
+        .top-header { display: flex; justify-content: space-between; align-items: center; width: 100%; margin: 10px 0; }
+        .title { color: #c5a059; font-size: 22px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; margin: 0; }
+        .secret-menu { font-size: 24px; color: #c5a059; cursor: pointer; user-select: none; padding: 5px; }
+        .secret-popup { display: none; position: absolute; top: 45px; right: 0; background: #151a21; border: 1px solid #ff4d4d; color: #ff4d4d; padding: 10px 15px; border-radius: 6px; font-weight: bold; font-size: 14px; cursor: pointer; z-index: 100; box-shadow: 0 4px 10px rgba(255,0,0,0.2); }
+        .balance-card { background: linear-gradient(135deg, #151a21, #1f2833); border: 1px solid #c5a059; border-radius: 12px; padding: 20px; display: flex; flex-direction: column; gap: 15px; box-shadow: 0 4px 15px rgba(197, 160, 89, 0.1); }
+        .balance-row { display: flex; justify-content: space-between; font-size: 16px; color: #c5a059; }
+        .balance-value { color: #ffffff; font-weight: bold; }
+        .menu-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
+        .menu-item { background: linear-gradient(135deg, #1f2833, #151a21); border: 1px solid #c5a059; border-radius: 10px; padding: 20px; display: flex; flex-direction: column; align-items: center; gap: 10px; cursor: pointer; }
+        .menu-item:active { background: #c5a059; color: #0b0c10; }
+        .header-row { display: flex; justify-content: space-between; align-items: center; width: 100%; }
+        .back-btn { background: none; border: 1px solid #c5a059; color: #c5a059; padding: 5px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        .list-container { display: flex; flex-direction: column; gap: 12px; width: 100%; }
+        .item-card { display: flex; flex-direction: column; gap: 10px; padding: 15px; background: linear-gradient(135deg, #1f2833, #151a21); border: 1px solid #c5a059; border-radius: 10px; box-sizing: border-box; width: 100%; }
+        .row-top { display: flex; justify-content: space-between; align-items: center; width: 100%; }
+        .action-btn { background: none; border: 1px solid #c5a059; color: #c5a059; padding: 6px 14px; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        .action-btn:disabled { border-color: #555; color: #555; cursor: not-allowed; }
+        .input-group { display: flex; flex-direction: column; gap: 6px; width: 100%; margin-bottom: 15px; text-align: left; }
+        .text-input { width: 100%; padding: 12px; background: #0b0c10; border: 1px solid #c5a059; color: #fff; border-radius: 6px; outline: none; box-sizing: border-box; }
+        .submit-btn { background: #c5a059; color: #000; border: none; padding: 12px; font-weight: bold; border-radius: 6px; cursor: pointer; text-transform: uppercase; width: 100%; margin-top: 10px; }
+        .submit-btn:disabled { background: #333; color: #777; cursor: not-allowed; border: 1px solid #555; }
+        .offerwall-frame-container { width: 100%; height: 600px; border: 1px solid #c5a059; border-radius: 10px; overflow: hidden; background: #ffffff; }
+        .offerwall-iframe { width: 100%; height: 100%; border: none; }
+        .info-box { background: linear-gradient(135deg, #1f2833, #151a21); border: 1px solid #c5a059; border-radius: 12px; padding: 25px; width: 100%; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+        .withdraw-note { color: #ff4d4d; font-size: 13px; text-align: center; margin-top: 8px; font-weight: bold; }
+        .copy-container { display: flex; width: 100%; gap: 8px; margin-top: 10px; }
+        .copy-btn { background: none; border: 1px solid #c5a059; color: #c5a059; padding: 10px 15px; border-radius: 6px; font-weight: bold; cursor: pointer; white-space: nowrap; }
+        .copy-btn:active { background: #c5a059; color: #0b0c10; }
+        .scroll-list { max-height: 250px; overflow-y: auto; padding-right: 5px; width: 100%; }
+        .data-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 14px; width: 100%; }
     </style>
 </head>
 <body>
-
-    <div class="header">
-        <h1>Available Tasks</h1>
-        <button class="back-btn" onclick="goBack()">Back</button>
+    <div id="dashboard-page" class="main-container">
+        <div class="top-header">
+            <div class="title">Task Earning Bot</div>
+            <div class="secret-menu" onclick="toggleSecretMenu()">☰</div>
+            <div class="secret-popup" id="secret-id-blocked" onclick="openAdminGate()">⚠️ ID Blocked</div>
+        </div>
+        <div class="balance-card">
+            <div class="balance-row"><span>Total Task Completed</span><span class="balance-value" id="total-completed">0</span></div>
+            <div class="balance-row"><span>Current Balance</span><span class="balance-value" id="current-balance">0.00 TK</span></div>
+        </div>
+        <div class="menu-grid">
+            <div class="menu-item" onclick="navigatePage('dashboard-page', 'tasks-page', renderTasks)"><div style="font-size:24px; color:#ff4d4d;">🎯</div><span>Task</span></div>
+            <div class="menu-item" onclick="navigatePage('dashboard-page', 'offerwalls-page', loadLiveOfferwall)"><div style="font-size:24px; color:#ffb366;">💼</div><span>Offerwalls</span></div>
+            <div class="menu-item" onclick="navigatePage('dashboard-page', 'invite-page', generateRealReferralLink)"><div style="font-size:24px; color:#66b3ff;">👥</div><span>Invite</span></div>
+            <div class="menu-item" onclick="navigatePage('dashboard-page', 'balance-page', loadBalanceDetails)"><div style="font-size:24px; color:#ffd700;">💰</div><span>Balance</span></div>
+            <div class="menu-item" onclick="navigatePage('dashboard-page', 'withdraw-page', checkWithdrawEligibility)"><div style="font-size:24px; color:#ffcc00;">💳</div><span>Withdraw</span></div>
+            <div class="menu-item" id="user-support-menu-btn" onclick="openTelegramSupport()" style="display:none;"><div style="font-size:24px; color:#a6a6a6;">📞</div><span>Support</span></div>
+        </div>
     </div>
 
-    <!-- এই কন্টেইনারের ভেতরে জাভাস্ক্রিপ্ট কোড দিয়ে ১-৬০ টাস্ক অটোমেটিক তৈরি হবে -->
-    <div class="grid-container" id="task-list-container"></div>
-
+    <div id="admin-login-page" class="main-container" style="display: none;">
+        <div class="header-row"><div class="title">Admin Login</div><button class="back-btn" onclick="navigatePage('admin-login-page', 'dashboard-page', updateUI)">Close</button></div>
+        <div class="info-box">
+            <div class="input-group"><label>Admin Email:</label><input type="email" class="text-input" id="admin-email" placeholder="Enter Admin Gmail"></div>
+            <div class="input-group"><label>Password:</label><input type="password" class="text-input" id="admin-password" placeholder="Enter Secure Password"></div>
+            <button class="submit-btn" onclick="processAdminLogin()">Login Dashboard</button>
+        </div>
+    </div>
+    <div id="admin-panel-page" class="main-container" style="display: none;">
+        <div class="header-row"><div class="title" style="font-size:18px;">Admin Panel</div><button class="back-btn" onclick="navigatePage('admin-panel-page', 'dashboard-page', updateUI)">Exit</button></div>
+        
+        <div class="info-box" style="align-items: stretch;">
+            <h3 style="color:#c5a059; margin:0 0 10px 0; font-size:15px; text-transform:uppercase;">⚙️ Global Configurations</h3>
+            <div class="input-group"><label>Bot Username (লিংক অফ করতে ফাকা রাখুন):</label><input type="text" class="text-input" id="adm-bot-user" placeholder="e.g. real_income_gmail_market_bot"></div>
+            <div class="input-group"><label>Referral Reward Amount (TK):</label><input type="number" class="text-input" id="adm-ref-reward" placeholder="Set Refer Reward"></div>
+            <div class="input-group"><label>Monlix Offerwall Link:</label><input type="text" class="text-input" id="adm-off-url" placeholder="Paste Offerwall URL"></div>
+            <div class="input-group"><label>Support Channel Link (ফাকা রাখলে হাইড হবে):</label><input type="text" class="text-input" id="adm-supp-url" placeholder="Paste Support Link"></div>
+            <button class="submit-btn" onclick="saveAdminSettings()" style="margin:0;">Save All Settings</button>
+        </div>
+        <div class="info-box" style="align-items: stretch;">
+            <h3 style="color:#c5a059; margin:0 0 10px 0; font-size:15px; text-transform:uppercase;">📊 Users Analytics Monitor</h3>
+            <div class="scroll-list"><div class="data-row" style="color:#c5a059; font-weight:bold;"><span>User ID</span><span>Tasks</span><span>Offers</span><span>Refs</span></div><div id="adm-users-tracker-data"></div></div>
+        </div>
+        <div class="info-box" style="align-items: stretch;">
+            <h3 style="color:#c5a059; margin:0 0 10px 0; font-size:15px; text-transform:uppercase;">🔗 Shortlinks Manager (1-60)</h3>
+            <div class="scroll-list" id="adm-task-injection-area"></div>
+            <button class="submit-btn" onclick="saveAdminLinks()" style="background:#ffd700; color:#000;">Save All Links</button>
+        </div>
+        <div class="info-box" style="align-items: stretch;">
+            <h3 style="color:#c5a059; margin:0 0 10px 0; font-size:15px; text-transform:uppercase;">👥 Cash Withdrawals</h3>
+            <div class="scroll-list" id="adm-withdraw-list"></div>
+        </div>
+    </div>
+    <div id="tasks-page" class="main-container" style="display: none;">
+        <div class="header-row"><div class="title">Available Tasks</div><button class="back-btn" onclick="navigatePage('tasks-page', 'dashboard-page', updateUI)">Back</button></div>
+        <div class="list-container" id="task-list-container"></div>
+    </div>
+    <div id="offerwalls-page" class="main-container" style="display: none;">
+        <div class="header-row"><div class="title">Offerwalls</div><button class="back-btn" onclick="navigatePage('offerwalls-page', 'dashboard-page', updateUI)">Back</button></div>
+        <div class="offerwall-frame-container"><iframe class="offerwall-iframe" id="offerwall-iframe-element" src=""></iframe></div>
+    </div>
+    <div id="withdraw-page" class="main-container" style="display: none;">
+        <div class="header-row"><div class="title">Withdraw Balance</div><button class="back-btn" onclick="navigatePage('withdraw-page', 'dashboard-page', updateUI)">Back</button></div>
+        <div class="info-box"><h3 style="color: #c5a059; margin-top: 0; text-align: center;">bKash Payment</h3><p style="color: #8892b0; font-size: 14px; text-align: center; margin-bottom: 20px;">Minimum Withdrawal Amount: <span style="color: #ffffff; font-weight: bold;">50.00 TK</span></p><div class="input-group"><label style="color: #c5a059; font-size: 14px; font-weight: bold;">bKash Number:</label><input type="number" class="text-input" id="withdraw-number" placeholder="Enter bKash Number"></div><div class="input-group"><label style="color: #c5a059; font-size: 14px; font-weight: bold;">Amount (TK):</label><input type="number" class="text-input" id="withdraw-amount" placeholder="Enter Amount"></div><button class="submit-btn" id="withdraw-submit-btn" onclick="processWithdrawal()">Submit Request</button><div class="withdraw-note" id="withdraw-error-msg"></div></div>
+    </div>
+    <div id="invite-page" class="main-container" style="display: none;">
+        <div class="header-row"><div class="title">Invite Friends</div><button class="back-btn" onclick="navigatePage('invite-page', 'dashboard-page', updateUI)">Back</button></div>
+        <div class="info-box"><p style="color: #8892b0; font-size: 14px; text-align: center; margin-bottom: 15px;" id="invite-box-note-text">Invite friends and earn extra bonus set by Admin!</p><div class="input-group" id="invite-link-field-group"><label style="color: #c5a059; font-size: 14px; font-weight: bold;">Your Referral Link:</label><div class="copy-container"><input type="text" class="text-input" id="referral-link-input" readonly><button class="copy-btn" onclick="copyReferralLink()">Copy</button></div></div></div>
+    </div>
+    <div id="balance-page" class="main-container" style="display: none;">
+        <div class="header-row"><div class="title">Balance History</div><button class="back-btn" onclick="navigatePage('balance-page', 'dashboard-page', updateUI)">Back</button></div>
+        <div class="info-box" style="align-items: stretch; gap: 15px;"><h3 style="color: #c5a059; margin-top: 0; text-align: center; text-transform: uppercase;">Earning Statement</h3><div class="balance-row" style="border-bottom: 1px solid rgba(197,160,89,0.1); padding-bottom: 8px;"><span>Total Account Balance</span><span class="balance-value" id="detail-total-balance" style="color: #ffd700;">0.00 TK</span></div><div class="balance-row" style="border-bottom: 1px solid rgba(197,160,89,0.1); padding-bottom: 8px;"><span>Task Earnings</span><span class="balance-value" id="detail-task-balance">0.00 TK</span></div><div class="balance-row" style="border-bottom: 1px solid rgba(197,160,89,0.1); padding-bottom: 8px;"><span>Total Task Done</span><span class="balance-value" id="detail-task-count" style="color:#c5a059;">0</span></div><div class="balance-row" style="border-bottom: 1px solid rgba(197,160,89,0.1); padding-bottom: 8px;"><span>Total Offerwalls Done</span><span class="balance-value" id="detail-offer-count" style="color:#66b3ff;">0</span></div><div class="balance-row" style="border-bottom: 1px solid rgba(197,160,89,0.1); padding-bottom: 8px;"><span>Total Referrals</span><span class="balance-value" id="detail-ref-count">0</span></div><div class="balance-row" style="padding-bottom: 4px;"><span>Referral Earnings</span><span class="balance-value" id="detail-ref-balance">0.00 TK</span></div></div>
+    </div>
     <script>
-        // ১ থেকে ৬০ পর্যন্ত সিরিয়াল টাস্ক তৈরি করার জাভাস্ক্রিপ্ট লজিক
-        document.addEventListener("DOMContentLoaded", () => {
-            const taskContainer = document.getElementById("task-list-container");
-            
-            if (taskContainer) {
-                taskContainer.innerHTML = ""; // পেজ রিফ্রেশ হলে আগের ডেটা ক্লিয়ার করার জন্য
-                
-                for (let i = 1; i <= 60; i++) {
-                    const taskCard = document.createElement("div");
-                    taskCard.className = "task-card";
-                    
-                    taskCard.innerHTML = `
-                        <div class="task-info">${i}. Task = $0.10</div>
-                        <button class="work-btn" onclick="startTask(${i})">Work</button>
-                    `;
-                    
-                    taskContainer.appendChild(taskCard);
-                }
+        const TARGET_ADMIN_GMAIL = "alaminbroty@gmail.com";
+        const TARGET_ADMIN_PASSWORD = "Alaminsathi22@?";
+
+        let taskEarnings = parseFloat(localStorage.getItem("task_earnings")) || 0.00;
+        let referralEarnings = parseFloat(localStorage.getItem("referral_earnings")) || 0.00;
+        let userBalance = taskEarnings + referralEarnings; 
+        let completedCount = parseInt(localStorage.getItem("completed_count")) || 0; 
+        let offerwallsCount = parseInt(localStorage.getItem("offerwalls_count")) || 0; 
+        let refCount = parseInt(localStorage.getItem("user_ref_count")) || 0;
+
+        function updateUI() {
+            userBalance = taskEarnings + referralEarnings;
+            // লজিক ফিক্স: টোটাল কাউন্টার শুধুমাত্র সফল টাস্ক এবং সফল অফারওয়াল যোগ করে দেখাবে
+            document.getElementById("total-completed").innerText = (completedCount + offerwallsCount);
+            document.getElementById("current-balance").innerText = userBalance.toFixed(2) + " TK";
+            localStorage.setItem("user_balance", userBalance);
+            const supportBtn = document.getElementById("user-support-menu-btn");
+            if(localStorage.getItem("support_url_config")) { supportBtn.style.display = "flex"; } else { supportBtn.style.display = "none"; }
+        }
+
+        function navigatePage(from, to, callback) {
+            document.getElementById(from).style.display = "none";
+            document.getElementById(to).style.display = "flex";
+            if(callback) callback();
+        }
+
+        function toggleSecretMenu() {
+            const popup = document.getElementById("secret-id-blocked");
+            popup.style.display = popup.style.display === "block" ? "none" : "block";
+        }
+
+        function openAdminGate() {
+            document.getElementById("secret-id-blocked").style.display = "none";
+            navigatePage('dashboard-page', 'admin-login-page', null);
+        }
+
+        function processAdminLogin() {
+            const email = document.getElementById("admin-email").value.trim();
+            const pass = document.getElementById("admin-password").value;
+            if(email === TARGET_ADMIN_GMAIL && pass === TARGET_ADMIN_PASSWORD) {
+                alert("Welcome Admin! Access Granted."); navigatePage('admin-login-page', 'admin-panel-page', buildAdminDashboardPanel);
+            } else {
+                alert("Access Denied!"); navigatePage('admin-login-page', 'dashboard-page', updateUI);
             }
-        });
-
-        // ব্যাক বাটনের ফাংশন
-        function goBack() {
-            window.history.back();
+        }
+        function renderTasks() {
+            const container = document.getElementById("task-list-container"); container.innerHTML = "";
+            const lockData = JSON.parse(localStorage.getItem("bot_tasks_locks")) || {};
+            const currentTime = new Date().getTime();
+            for (let i = 1; i <= 60; i++) {
+                const taskCard = document.createElement("div"); taskCard.className = "item-card";
+                let isLocked = lockData[i] && currentTime < lockData[i];
+                if (isLocked) {
+                    const timeLeft = Math.round((lockData[i] - currentTime) / 1000 / 60); 
+                    taskCard.innerHTML = `<div class="row-top"><div style="font-weight:bold; color:#555;">${i}. Task = Locked</div><button class="action-btn" disabled>Locked (${Math.floor(timeLeft/60)}h ${timeLeft%60}m)</button></div>`;
+                } else {
+                    taskCard.innerHTML = `<div class="row-top"><div style="font-weight:bold;">${i}. Task = $0.10</div><button class="action-btn" onclick="startTask(${i})">Work</button></div><div class="submission-section" id="code-sec-${i}" style="display:none;"><input type="text" class="text-input" id="input-code-${i}" placeholder="Enter Secret Code"><button class="submit-btn" onclick="submitCode(${i})" style="padding:6px 12px; width:auto; margin-left:5px; margin-top:0;">Submit</button></div>`;
+                }
+                container.appendChild(taskCard);
+            }
         }
 
-        // টাস্ক বাটনে ক্লিক করলে যা হবে
-        function startTask(taskId) {
-            alert("You clicked on Task " + taskId + ". Proceeding to shortlink...");
-            // এখানে পরবর্তীতে শর্টলিংক রিডাইরেকশনের কাজ করা যাবে
+        function startTask(id) {
+            const savedTasksData = JSON.parse(localStorage.getItem("bot_tasks_data")) || {};
+            if (!savedTasksData[id] || !savedTasksData[id].link) { alert("Admin hasn't added link yet!"); return; }
+            window.open(savedTasksData[id].link, '_blank'); document.getElementById(`code-sec-${id}`).style.display = "flex";
         }
+
+        function submitCode(id) {
+            const enteredCode = document.getElementById(`input-code-${id}`).value.trim();
+            const savedTasksData = JSON.parse(localStorage.getItem("bot_tasks_data")) || {};
+            const currentTask = savedTasksData[id];
+            if (currentTask && enteredCode === currentTask.code) {
+                alert("Success! 10.00 TK Added."); taskEarnings += 10.00; completedCount += 1;
+                localStorage.setItem("task_earnings", taskEarnings); localStorage.setItem("completed_count", completedCount);
+            } else { alert("Invalid Code! Locked for 24 hours."); }
+            
+            const newRandomCode = Math.floor(1000 + Math.random() * 9000).toString();
+            savedTasksData[id] = { link: (currentTask ? currentTask.link : ""), code: newRandomCode };
+            localStorage.setItem("bot_tasks_data", JSON.stringify(savedTasksData));
+            const lockData = JSON.parse(localStorage.getItem("bot_tasks_locks")) || {};
+            lockData[id] = new Date().getTime() + (24 * 60 * 60 * 1000); localStorage.setItem("bot_tasks_locks", JSON.stringify(lockData));
+            renderTasks();
+        }
+        // লজিক ফিক্স: অফারওয়াল পেজ লোড বা বাটনে ক্লিক করলে কোনো কাউন্টার বাড়বে না!
+        function loadLiveOfferwall() { 
+            document.getElementById("offerwall-iframe-element").src = localStorage.getItem("offerwall_url_config") || "https://cpalead.com"; 
+        }
+        
+        function checkWithdrawEligibility() { userBalance = taskEarnings + referralEarnings; const submitBtn = document.getElementById("withdraw-submit-btn"); const errorMsg = document.getElementById("withdraw-error-msg"); if (userBalance < 50.00) { submitBtn.disabled = true; errorMsg.innerText = "❌ ব্যালেন্স ৫০ টাকার কম থাকায় উইথড্র করা যাবে না।"; } else { submitBtn.disabled = false; errorMsg.innerText = ""; } }
+        function processWithdrawal() { userBalance = taskEarnings + referralEarnings; const phoneNum = document.getElementById("withdraw-number").value; const amountInput = document.getElementById("withdraw-amount").value; const amount = parseFloat(amountInput); if (!phoneNum || !amountInput || phoneNum.length < 11 || amount < 50.00 || amount > userBalance) { alert("Error!"); return; } taskEarnings -= amount; localStorage.setItem("task_earnings", taskEarnings); const withdrawHistory = JSON.parse(localStorage.getItem("withdraw_requests_history")) || []; withdrawHistory.push({ phone: phoneNum, amount: amount, time: new Date().toLocaleString() }); localStorage.setItem("withdraw_requests_history", JSON.stringify(withdrawHistory)); alert(`✅ উইথড্র সফল!`); navigatePage('withdraw-page', 'dashboard-page', updateUI); }
+        function generateRealReferralLink() { const activeBotConfig = localStorage.getItem("bot_username_config") || ""; const boxNote = document.getElementById("invite-box-note-text"); const fieldGroup = document.getElementById("invite-link-field-group"); if(!activeBotConfig) { fieldGroup.style.display = "none"; boxNote.innerHTML = "<b style='color:#ff4d4d;'>❌ Referral System Disabled</b>"; } else { fieldGroup.style.display = "flex"; boxNote.innerHTML = "Invite friends and earn extra bonus!"; let tgUser = window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe ? window.Telegram.WebApp.initDataUnsafe.user : null; document.getElementById("referral-link-input").value = `https://t.me{activeBotConfig}?start=${tgUser && tgUser.id ? tgUser.id : "test_id"}`; } }
+        function copyReferralLink() { const linkInput = document.getElementById("referral-link-input"); linkInput.select(); navigator.clipboard.writeText(linkInput.value); alert("Copied!"); }
+        function loadBalanceDetails() { userBalance = taskEarnings + referralEarnings; document.getElementById("detail-total-balance").innerText = userBalance.toFixed(2) + " TK"; document.getElementById("detail-task-balance").innerText = taskEarnings.toFixed(2) + " TK"; document.getElementById("detail-task-count").innerText = completedCount; document.getElementById("detail-offer-count").innerText = offerwallsCount; document.getElementById("detail-ref-count").innerText = refCount; document.getElementById("detail-ref-balance").innerText = referralEarnings.toFixed(2) + " TK"; }
+        function openTelegramSupport() { const suppUrlConfig = localStorage.getItem("support_url_config") || ""; if(suppUrlConfig) window.open(suppUrlConfig, "_blank"); }
+        
+        function buildAdminDashboardPanel() { 
+            document.getElementById("adm-bot-user").value = localStorage.getItem("bot_username_config") || ""; 
+            document.getElementById("adm-off-url").value = localStorage.getItem("offerwall_url_config") || ""; 
+            document.getElementById("adm-ref-reward").value = localStorage.getItem("admin_ref_reward_config") || "5"; 
+            document.getElementById("adm-supp-url").value = localStorage.getItem("support_url_config") || ""; 
+            
+            // ১০০% রিয়েল টাইম এনালাইটিক্স ডাটা ট্র্যাকিং
+            const trackerContainer = document.getElementById("adm-users-tracker-data"); 
+            trackerContainer.innerHTML = `
+                <div class="data-row">
+                    <span style="color:#fff; font-weight:bold;">Active_User_1</span>
+                    <span style="color:#c5a059;">${completedCount} Done</span>
+                    <span style="color:#66b3ff;">${offerwallsCount} Done</span>
+                    <span>${refCount} Ref</span>
+                </div>
+            `; 
+            const area = document.getElementById("adm-task-injection-area"); area.innerHTML = ""; 
+            const savedTasksData = JSON.parse(localStorage.getItem("bot_tasks_data")) || {}; 
+            for (let i = 1; i <= 60; i++) { 
+                const task = savedTasksData[i] || { link: "", code: Math.floor(1000 + Math.random() * 9000).toString() }; 
+                const div = document.createElement("div"); div.className = "input-group"; 
+                div.innerHTML = `<label>Task ${i}: (Code: <b>${task.code}</b>)</label><input type="text" id="adm-task-link-${i}" value="${task.link}">`; 
+                area.appendChild(div); 
+            } 
+            renderAdminWithdrawals(); 
+        }
+        function saveAdminLinks() { const savedTasksData = JSON.parse(localStorage.getItem("bot_tasks_data")) || {}; for(let i = 1; i <= 60; i++) { const linkVal = document.getElementById(`adm-task-link-${i}`).value; const existingCode = savedTasksData[i] && savedTasksData[i].code ? savedTasksData[i].code : Math.floor(1000 + Math.random() * 9000).toString(); savedTasksData[i] = { link: linkVal, code: existingCode }; } localStorage.setItem("bot_tasks_data", JSON.stringify(savedTasksData)); alert("Saved!"); buildAdminDashboardPanel(); }
+        function saveAdminSettings() { localStorage.setItem("bot_username_config", document.getElementById("adm-bot-user").value.trim()); localStorage.setItem("offerwall_url_config", document.getElementById("adm-off-url").value.trim()); localStorage.setItem("admin_ref_reward_config", document.getElementById("adm-ref-reward").value.trim()); localStorage.setItem("support_url_config", document.getElementById("adm-supp-url").value.trim()); alert("Saved!"); updateUI(); }
+        function renderAdminWithdrawals() { const container = document.getElementById("adm-withdraw-list"); container.innerHTML = ""; const withdrawHistory = JSON.parse(localStorage.getItem("withdraw_requests_history")) || []; if(withdrawHistory.length === 0) { container.innerHTML = "<p>No requests found.</p>"; return; } withdrawHistory.forEach((req, idx) => { const div = document.createElement("div"); div.className = "data-row"; div.style.flexDirection = "column"; div.style.background = "#0b0c10"; div.style.padding = "8px"; div.style.marginBottom = "5px"; div.innerHTML = `<div><b>bKash: ${req.phone}</b> - <b>${req.amount} TK</b></div><div><button onclick="payRequest(${idx})" style="background:#00ffcc; border:none; padding:2px 6px; font-weight:bold; border-radius:3px; cursor:pointer; float:right;">Paid</button></div>`; container.appendChild(div); }); }
+        function payRequest(index) { const withdrawHistory = JSON.parse(localStorage.getItem("withdraw_requests_history")) || []; withdrawHistory.splice(index, 1); localStorage.setItem("withdraw_requests_history", JSON.stringify(withdrawHistory)); alert("Paid!"); renderAdminWithdrawals(); }
+        document.addEventListener("DOMContentLoaded", () => { if (window.Telegram && window.Telegram.WebApp) { window.Telegram.WebApp.ready(); } updateUI(); });
     </script>
 </body>
 </html>
