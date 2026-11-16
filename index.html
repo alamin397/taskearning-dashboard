@@ -70,19 +70,19 @@
     <div id="admin-panel-page" class="main-container" style="display: none;">
         <div class="header-row"><div class="title" style="font-size:18px;">Admin Panel</div><button class="back-btn" onclick="navigatePage('admin-panel-page', 'dashboard-page', updateUI)">Exit</button></div>
         
-        <div class="info-box" style="align-items: stretch; border: 1px solid #ff4d4d;">
-            <h3 style="color:#ff4d4d; margin:0 0 10px 0; font-size:15px; text-transform:uppercase; text-align:center;">📊 Real-time Traffic Monitor</h3>
+        <div class="info-box" style="align-items: stretch; border: 1px solid #00ffcc;">
+            <h3 style="color:#00ffcc; margin:0 0 10px 0; font-size:15px; text-transform:uppercase; text-align:center;">📊 Device Session Status</h3>
             <div class="analytics-grid">
                 <div class="analytics-card" style="border-color:#00ffcc;">
-                    <div style="font-size:12px; color:#00ffcc; font-weight:bold;">🟢 ACTIVE USERS</div>
-                    <div class="analytics-num" id="live-active-counter">0</div>
+                    <div style="font-size:12px; color:#00ffcc; font-weight:bold;">🟢 CURRENT SESSION</div>
+                    <div class="analytics-num" id="live-active-counter">1</div>
                 </div>
                 <div class="analytics-card" style="border-color:#ffd700;">
-                    <div style="font-size:12px; color:#ffd700; font-weight:bold;">👥 TOTAL USERS</div>
-                    <div class="analytics-num" id="live-total-counter">0</div>
+                    <div style="font-size:12px; color:#ffd700; font-weight:bold;">📱 THIS DEVICE</div>
+                    <div class="analytics-num" id="live-total-counter">1</div>
                 </div>
             </div>
-            <button class="submit-btn" onclick="fetchLiveTrafficAnalytics()" style="margin:0; background:#1f2833; color:#fff; border:1px solid #ff4d4d; font-size:12px; padding:6px;">Refresh Traffic Stats</button>
+            <p style="color:#8892b0; font-size:12px; text-align:center; margin:0;">* লাইভ গ্লোবাল ইউজার ও আয়ের সঠিক হিসাব দেখতে Offerwall.me ড্যাশবোর্ডের Reports চেক করুন।</p>
         </div>
 
         <div class="info-box" style="align-items: stretch;">
@@ -118,10 +118,6 @@
         const TARGET_ADMIN_GMAIL = "alaminbroty@gmail.com";
         const TARGET_ADMIN_PASSWORD = "Alaminsathi22@?";
 
-        const OFFERWALL_PUBLIC_API = "CLJdvEaGPAtGmosUXIPFLJpiYpqm8u";
-        const BOT_USERNAME = "real_income_gmail_market_bot";
-        const SUPPORT_HANDLE = "Alaminbroty";
-
         let offerwallEarnings = parseFloat(localStorage.getItem("task_earnings")) || 0.00;
         let referralCommissionEarnings = parseFloat(localStorage.getItem("referral_earnings")) || 0.00;
         let userBalance = offerwallEarnings + referralCommissionEarnings; 
@@ -142,15 +138,14 @@
         }
         function loadLiveOfferwall() {
             let tgUser = window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe ? window.Telegram.WebApp.initDataUnsafe.user : null;
-            let userId = tgUser && tgUser.id ? tgUser.id : "guest_user_" + Math.floor(1000 + Math.random() * 9000);
-            const offerwallUrl = `https://offerwall.me{OFFERWALL_PUBLIC_API}/${userId}`;
-            document.getElementById("offerwall-iframe-element").src = offerwallUrl;
+            let userId = tgUser && tgUser.id ? tgUser.id : "user_" + Math.floor(1000 + Math.random() * 9000);
+            document.getElementById("offerwall-iframe-element").src = "https://offerwall.me" + userId;
         }
 
         function generateRealReferralLink() {
             let tgUser = window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe ? window.Telegram.WebApp.initDataUnsafe.user : null;
             let userId = tgUser && tgUser.id ? tgUser.id : "user_ref";
-            document.getElementById("referral-link-input").value = `https://t.me{BOT_USERNAME}?start=${userId}`;
+            document.getElementById("referral-link-input").value = "https://t.me" + userId;
         }
 
         function copyReferralLink() {
@@ -161,7 +156,7 @@
         }
 
         function openTelegramSupport() {
-            window.open(`https://t.me{SUPPORT_HANDLE}`, "_blank");
+            window.open("https://t.me", "_blank");
         }
 
         function toggleSecretMenu() {
@@ -183,14 +178,6 @@
                 alert("Access Denied!"); 
                 navigatePage('admin-login-page', 'dashboard-page', updateUI);
             }
-        }
-
-        function fetchLiveTrafficAnalytics() {
-            let totalSimulated = parseInt(localStorage.getItem("sim_total_users")) || Math.floor(140 + Math.random() * 35);
-            let activeSimulated = Math.floor(6 + Math.random() * 14);
-            localStorage.setItem("sim_total_users", totalSimulated + Math.floor(Math.random() * 2));
-            document.getElementById("live-total-counter").innerText = localStorage.getItem("sim_total_users");
-            document.getElementById("live-active-counter").innerText = activeSimulated;
         }
 
         function checkWithdrawEligibility() { 
@@ -231,7 +218,8 @@
         }
 
         function buildAdminDashboardPanel() { 
-            fetchLiveTrafficAnalytics();
+            document.getElementById("live-total-counter").innerText = "1";
+            document.getElementById("live-active-counter").innerText = "1";
             renderAdminWithdrawals(); 
         }
 
