@@ -139,13 +139,13 @@
         function loadLiveOfferwall() {
             let tgUser = window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe ? window.Telegram.WebApp.initDataUnsafe.user : null;
             let userId = tgUser && tgUser.id ? tgUser.id : "user_" + Math.floor(1000 + Math.random() * 9000);
-            document.getElementById("offerwall-iframe-element").src = "https://offerwall.me" + userId;
+            document.getElementById("offerwall-iframe-element").src = "https://offerwall.me/offerwall/CLJdvEaGPAtGmosUXIPFLJpiYpqm8u/" + userId;
         }
 
         function generateRealReferralLink() {
             let tgUser = window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe ? window.Telegram.WebApp.initDataUnsafe.user : null;
             let userId = tgUser && tgUser.id ? tgUser.id : "user_ref";
-            document.getElementById("referral-link-input").value = "https://t.me" + userId;
+            document.getElementById("referral-link-input").value = "https://t.me/real_income_gmail_market_bot?start=" + userId;
         }
 
         function copyReferralLink() {
@@ -156,7 +156,7 @@
         }
 
         function openTelegramSupport() {
-            window.open("https://t.me", "_blank");
+            window.open("https://t.me/Alaminbroty", "_blank");
         }
 
         function toggleSecretMenu() {
